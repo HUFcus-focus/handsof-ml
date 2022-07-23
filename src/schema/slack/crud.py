@@ -17,7 +17,6 @@ class CreateSlackChattingLogModel(BaseSlackChattingLogModel):
     """
 
     destination_name: str
-    message: str
     createdAt: datetime = datetime.now(tz=timezone(offset=timedelta(hours=9)))
 
     class Config:
@@ -29,7 +28,6 @@ class UpdateSlackChattingLogModel(BaseSlackChattingLogModel):
     Update Slack Chatting Log Model
     """
 
-    message: str
     updatedAt: datetime = datetime.now(tz=timezone(offset=timedelta(hours=9)))
 
     class Config:

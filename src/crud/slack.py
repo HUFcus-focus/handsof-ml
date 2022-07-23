@@ -34,7 +34,7 @@ class CRUDSlack(
         worker = slack.Worker(token=workspace.pop("accessToken"))
 
         converted_insert_data = insert_data.dict()
-        converted_insert_data["workpsace"] = workspace
+        converted_insert_data["workspace"] = workspace
 
         converted_insert_data["destination"] = {}
         converted_insert_data["destination"]["destinationId"] = destination_id
@@ -42,7 +42,7 @@ class CRUDSlack(
             "destinationName"
         ] = converted_insert_data.pop("destination_name")
 
-        converted_insert_data["userId"] = user_id
+        converted_insert_data["userId"] = ObjectId(user_id)
 
         worker.send_message(
             destination=destination_id,
