@@ -15,15 +15,15 @@ async def slack_oauth(
     """
     try:
         worker = slack.Worker()
-        if result := worker.oauth_access(auth_code=code):
-            JSONResponse(
-                status_code=status.HTTP_200_OK, content={"detail": result}
-            )
+        result = worker.oauth_access(auth_code=code)
+
+        if result["status"]:
+            print(result["detail"])
 
         else:
             JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                content={"detail": result["error"]},
+                content={"detail": result["detail"]},
             )
 
     except Exception as error:

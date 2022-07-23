@@ -1,6 +1,7 @@
 from slack_sdk import WebClient
 
 from src.core import get_settings
+from src.schema import SlackIntegrationModel
 
 
 class Worker:
@@ -24,7 +25,13 @@ class Worker:
 
         result: dict[str, bool | str] = {"status": response["ok"]}
         if result["status"]:
-            result["detail"] = response["authed_user"]["access_token"]
+            result["detail"] = SlackIntegrationModel(
+                slack={
+                    "accessToken": response["authed_user"]["access_token"],
+                    "workspaceId": response["team"]["id"],
+                    "workspaceName": response["team"]["name"],
+                }
+            )
 
         else:
             result["detail"] = response["error"]
