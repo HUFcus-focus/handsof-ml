@@ -22,7 +22,7 @@ class CRUDUser(CRUDBase[CreateUserModel, UpdateUserModel]):
 
         session = request.app.db[self.collection]
 
-        tokens = await session.find_one({"_id", ObjectId(user_id)})
+        tokens = await session.find_one({"_id": ObjectId(user_id)})
         print(tokens)
         for token in tokens["slack"]["accessToken"]:
             if token == update_data.slack["accessToken"]:
