@@ -8,47 +8,66 @@ class Worker:
     Slack API Worker Class
     """
 
-    def __init__(self) -> None:
-        self.client: WebClient = WebClient(token=get_settings().SLACK_TOKEN)
+    def __init__(self, token: str = get_settings().SLACK_TOKEN) -> None:
+        self.client: WebClient = WebClient(token=token)
 
-    def oauth_access(self, auth_code: str):
-        """ """
+    def oauth_access(self, auth_code: str) -> dict[str, bool | str]:
+        """
+        Get Slack OAuth
+        """
         response = self.client.oauth_v2_access(
             client_id=get_settings().SLACK_CLIENT_ID,
             client_secret=get_settings().SLACK_CLIENT_SECRET,
             code=auth_code,
+            redirect_uri="https://handsof.today",
         )
 
-        return response
+        result: dict[str, bool | str] = {"status": response["ok"]}
+        if result["status"]:
+            result["detail"] = response["authed_user"]["access_token"]
 
-    def get_channels(self) -> list[dict[str, str]] | dict:
+        else:
+            result["detail"] = response["error"]
+
+        return result
+
+    def get_channels(self) -> dict[str, bool | str | list[dict[str, str]]]:
         """
         Get Slack Channels
         """
         response = self.client.conversations_list(
             types="public_channel,private_channel"
         )
-        if response["ok"]:
-            result: list[dict[str, str]] = []
-            for channel in response["channels"]:
-                result.append({"id": channel["id"], "name": channel["name"]})
 
-            return result
+        result: dict[str, bool | str | list[dict[str, str]]] = {
+            "status": response["ok"]
+        }
+        if result["status"]:
+            channels: list[dict[str, str]] = []
+            for channel in response["channels"]:
+                channels.append({"id": channel["id"], "name": channel["name"]})
+
+            result["detail"] = channels
 
         else:
-            return response
+            result["detail"] = response["error"]
 
-    def get_users(self) -> list[dict[str, str]] | dict:
+        return result
+
+    def get_users(self) -> dict[str, bool | str | list[dict[str, str]]]:
         """
         Get Users in Slack Channel
         """
         response = self.client.users_list()
 
-        if response["ok"]:
-            result: list[dict[str, str]] = []
+        result: dict[str, bool | str | list[dict[str, str]]] = {
+            "status": response["ok"]
+        }
+        if result["status"]:
+            users: list[dict[str, str]] = []
             for user in response["members"]:
                 if not user["is_bot"] and user["name"] != "slackbot":
-                    result.append(
+                    users.append(
                         {
                             "id": user["id"],
                             "real_name": user["profile"]["real_name"],
@@ -56,10 +75,12 @@ class Worker:
                         }
                     )
 
-            return result
+            result["detail"] = users
 
         else:
-            return response
+            result["detail"] = response["error"]
+
+        return result
 
     def send_message(self, destination: str, message: str):
         """
