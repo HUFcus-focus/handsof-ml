@@ -20,7 +20,6 @@ class Worker:
             client_id=get_settings().SLACK_CLIENT_ID,
             client_secret=get_settings().SLACK_CLIENT_SECRET,
             code=auth_code,
-            redirect_uri="https://handsof.today",
         )
 
         result: dict[str, bool | str] = {"status": response["ok"]}
