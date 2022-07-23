@@ -16,14 +16,14 @@ class CRUDUser(CRUDBase[CreateUserModel, UpdateUserModel]):
         self,
         request: Request,
         user_id: str,
-        platform: Platforms,
+        platform: Platforms.value,
         update_data: SlackIntegrationModel,
     ):
         session: AsyncIOMotorClient = request.app.db[self.collection]
 
         result = await session.update(
             {"_id": user_id},
-            {"$push": {platform.value: jsonable_encoder(update_data)}},
+            {"$push": {platform: jsonable_encoder(update_data)}},
         )
 
         return result
