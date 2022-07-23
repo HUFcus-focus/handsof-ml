@@ -4,6 +4,7 @@ from src.schema.slack import (
 )
 from src.schema.user import (
     CreateUserModel,
+    Platforms,
     SlackIntegrationModel,
     UpdateUserModel,
 )

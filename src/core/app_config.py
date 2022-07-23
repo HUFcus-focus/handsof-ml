@@ -8,11 +8,11 @@ class Settings(BaseSettings):
     Create Application Base Configurations
     """
 
-    LEVEL: str = Field("LEVEL")
-    DB_NAME: str = Field("DB_NAME")
-    SLACK_TOKEN: str = Field("SLACK_TOKEN")
-    SLACK_CLIENT_ID: str = Field("SLACK_CLIENT_ID")
-    SLACK_CLIENT_SECRET: str = Field("SLACK_CLIENT_SECRET")
+    LEVEL: str = Field(env="LEVEL")
+    DB_NAME: str = Field(env="DB_NAME")
+    SLACK_TOKEN: str = Field(env="SLACK_TOKEN")
+    SLACK_CLIENT_ID: str = Field(env="SLACK_CLIENT_ID")
+    SLACK_CLIENT_SECRET: str = Field(env="SLACK_CLIENT_SECRET")
     PROJECT_TITLE: str = "Handsof API Document"
     PROJECT_VERSION: int = 1
     PROJECT_DESCRIPTION: str = (
@@ -30,7 +30,7 @@ class DevelopSettings(Settings):
     Create Application Develop Level Configurations
     """
 
-    DB_URL: str = Field("DEVELOP_DB_URL")
+    DB_URL: str = Field(env="DEVELOP_DB_URL")
     ALLOW_ORIGINS: list[str] = ["*"]
     ALLOW_CREDENTIALS: bool = True
     ALLOW_METHODS: list[str] = ["*"]
@@ -43,7 +43,7 @@ class ProductSettings(Settings):
     Create Application Product Level Configuration
     """
 
-    DB_URL: str = Field("PRODUCT_DB_URL")
+    DB_URL: str = Field(env="PRODUCT_DB_URL")
     ALLOW_ORIGINS: list[str] = ["https://hadnsof.today"]
     ALLOW_CREDENTIALS: bool = True
     ALLOW_METHODS: list[str] = ["*"]

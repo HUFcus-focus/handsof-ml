@@ -1,4 +1,11 @@
+from enum import Enum
+
 from pydantic import BaseModel, EmailStr
+
+
+class Platforms(str, Enum):
+    SLACK = "slack"
+    DISCORD = "discord"
 
 
 class BaseUserModel(BaseModel):

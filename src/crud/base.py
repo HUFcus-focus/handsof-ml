@@ -3,7 +3,6 @@ from typing import Generic, TypeVar
 from bson.objectid import ObjectId
 from fastapi import Request
 from fastapi.encoders import jsonable_encoder
-from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 
 CreateSchema = TypeVar("CreateSchema", bound=BaseModel)
@@ -22,7 +21,7 @@ class CRUDBase(Generic[CreateSchema, UpdateSchema]):
         """
         Get a Single Data
         """
-        session: AsyncIOMotorClient = request.app.db[self.collection]
+        session = request.app.db[self.collection]
         if document := await session.find_one({"_id": ObjectId(_id)}):
             document["_id"] = str(document["_id"])
             return document
@@ -34,7 +33,7 @@ class CRUDBase(Generic[CreateSchema, UpdateSchema]):
         """
         Get Multi Data
         """
-        session: AsyncIOMotorClient = request.app.db[self.collection]
+        session = request.app.db[self.collection]
 
         result: dict = {}
         if not (data_size := await session.count_documents()):
@@ -49,7 +48,7 @@ class CRUDBase(Generic[CreateSchema, UpdateSchema]):
         """
         Insert a Single Data
         """
-        session: AsyncIOMotorClient = request.app.db[self.collection]
+        session = request.app.db[self.collection]
 
         inserted_document = await session.insert_one(
             jsonable_encoder(insert_data)
