@@ -17,7 +17,7 @@ class CRUDUser(CRUDBase[CreateUserModel, UpdateUserModel]):
 
         result = await session.update_one(
             {"_id": ObjectId(user_id)},
-            {"$push": {jsonable_encoder(update_data)}},
+            {"$push": jsonable_encoder(update_data)},
         )
         print(result.__dict__)
         return result
