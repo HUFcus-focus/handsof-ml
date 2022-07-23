@@ -23,10 +23,10 @@ class CRUDUser(CRUDBase[CreateUserModel, UpdateUserModel]):
 
         tokens = await session.find_one(
             {"_id": ObjectId(user_id)},
-            {"projection": {"_id": False, "slack": True}},
+            {"projection": {"_id": False, "slack.accessToken": True}},
         )
         converted_update_data = update_data.dict()
-        for token in tokens["slack"]:
+        for token in tokens:
             if token == converted_update_data["slack"]["accessToken"]:
                 raise Exception("Alrey Exists")
 
