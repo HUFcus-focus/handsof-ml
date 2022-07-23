@@ -47,7 +47,7 @@ async def slack_oauth(
         if result["status"]:
             if await user_crud.platform_integrate(
                 request=request,
-                user_id="62dbc242da1ded1f71a3ab3c",
+                user_id="",
                 update_data=result["detail"],
             ):
                 return JSONResponse(
