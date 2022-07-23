@@ -1,3 +1,4 @@
+from bson.objectid import ObjectId
 from fastapi import Request
 from fastapi.encoders import jsonable_encoder
 
@@ -21,10 +22,10 @@ class CRUDUser(CRUDBase[CreateUserModel, UpdateUserModel]):
         session = request.app.db[self.collection]
 
         result = await session.update_one(
-            {"_id": user_id},
+            {"_id": ObjectId(user_id)},
             {"$push": {platform: jsonable_encoder(update_data)}},
         )
-
+        print(result)
         return result
 
 

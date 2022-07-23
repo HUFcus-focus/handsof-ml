@@ -24,7 +24,6 @@ class CreateUserModel(BaseUserModel):
     name: str
     email: EmailStr
     password: str
-    slack: list = []
 
 
 class UpdateUserModel(BaseUserModel):
