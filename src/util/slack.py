@@ -37,12 +37,15 @@ class Worker:
 
         return result
 
-    def get_channels(self) -> dict[str, bool | str | list[dict[str, str]]]:
+    def get_channels(
+        self, team_id: str
+    ) -> dict[str, bool | str | list[dict[str, str]]]:
         """
         Get Slack Channels
         """
         response = self.client.conversations_list(
-            types="public_channel,private_channel"
+            types="public_channel,private_channel",
+            team_id=team_id,
         )
 
         result: dict[str, bool | str | list[dict[str, str]]] = {
@@ -60,11 +63,13 @@ class Worker:
 
         return result
 
-    def get_users(self) -> dict[str, bool | str | list[dict[str, str]]]:
+    def get_users(
+        self, team_id: str
+    ) -> dict[str, bool | str | list[dict[str, str]]]:
         """
         Get Users in Slack Channel
         """
-        response = self.client.users_list()
+        response = self.client.users_list(team_id=team_id)
 
         result: dict[str, bool | str | list[dict[str, str]]] = {
             "status": response["ok"]
@@ -88,11 +93,13 @@ class Worker:
 
         return result
 
-    def send_message(self, destination: str, message: str):
+    def send_message(
+        self, destination: str, message: str
+    ) -> dict[str, bool | str]:
         """
         Send Message to Slack
         """
-        self.client.chat_postMessage(
+        response = self.client.chat_postMessage(
             channel=destination,
             blocks=[
                 {
@@ -113,4 +120,11 @@ class Worker:
             ],
         )
 
-        return
+        result: dict[str, bool | str] = {"status": response["ok"]}
+        if result["status"]:
+            result["detail"] = message
+
+        else:
+            result["detail"] = response["error"]
+
+        return result

@@ -16,9 +16,7 @@ class CreateSlackChattingLogModel(BaseSlackChattingLogModel):
     Create Slack Chatting Log Model
     """
 
-    userId: str
-    workspace: dict[str, str]
-    destination: dict[str, str]
+    destination_name: str
     message: str
     createdAt: datetime = datetime.now(tz=timezone(offset=timedelta(hours=9)))
 
