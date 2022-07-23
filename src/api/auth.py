@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body, Query, Request, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 
 from src.crud import user_crud
 from src.schema import CreateUserModel
@@ -50,24 +50,26 @@ async def slack_oauth(
                 user_id="62dbd9ba9e804cba2f19ea16",
                 update_data=result["detail"],
             ):
-                return JSONResponse(
+                return RedirectResponse(
+                    url="https://handsof.today",
                     status_code=status.HTTP_200_OK,
-                    content={"detail": "success"},
                 )
 
             else:
-                return JSONResponse(
-                    status_code=status.HTTP_404_NOT_FOUND, content={"data": []}
+                return RedirectResponse(
+                    url="https://handsof.today",
+                    status_code=status.HTTP_404_NOT_FOUND,
                 )
 
         else:
-            JSONResponse(
+            RedirectResponse(
+                url="https://handsof.today",
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                content={"detail": result["detail"]},
             )
 
     except Exception as error:
-        return JSONResponse(
+        print(error)
+        return RedirectResponse(
+            url="https://handsof.today",
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={"detail": str(error)},
         )
