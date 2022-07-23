@@ -23,11 +23,11 @@ class CRUDUser(CRUDBase[CreateUserModel, UpdateUserModel]):
         session = request.app.db[self.collection]
 
         tokens = await session.find_one(
-            filter={"_id", ObjectId(user_id)},
+            {"_id", ObjectId(user_id)},
             projection={"_id": False, "slack": True},
         )
-
-        for token in tokens:
+        print(tokens)
+        for token in tokens["accessToken"]:
             if token == update_data.slack["accessToken"]:
                 raise Exception("Alrey Exists")
 
