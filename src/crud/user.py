@@ -13,7 +13,23 @@ class CRUDUser(CRUDBase[CreateUserModel, UpdateUserModel]):
         user_id: str,
         update_data: SlackIntegrationModel,
     ):
+        """
+        Slack Integration
+
+        To-do
+        1. Create and raise AlreadyExistsException
+        """
+
         session = request.app.db[self.collection]
+
+        tokens = await session.find_one(
+            filter={"_id", ObjectId(user_id)},
+            projection={"_id": False, "slack": True},
+        )
+
+        for token in tokens:
+            if token == update_data.slack["accessToken"]:
+                raise Exception("Alrey Exists")
 
         result = await session.update_one(
             {"_id": ObjectId(user_id)},
